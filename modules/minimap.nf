@@ -1,6 +1,7 @@
 process copyReference {
 
     label 'smallcpu'
+    executor 'local'
 
     input:
     file(reference)
