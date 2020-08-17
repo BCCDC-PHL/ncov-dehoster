@@ -6,6 +6,7 @@ nextflow.preview.dsl = 2
 // Modules
 include copyReference from './modules/minimap.nf'
 include minimap2 from './modules/minimap.nf'
+include bwa_mem from './modules/bwa-mem.nf'
 include samtoolsFlagstat from './modules/minimap.nf'
 include removeMappedReads from './modules/minimap.nf'
 include extractFastq from './modules/minimap.nf'
@@ -27,7 +28,7 @@ workflow {
 
     copyReference(ch_ref)
 
-    minimap2(ch_fastq
+    bwa_mem(ch_fastq
                 .combine(copyReference.out))
 
     samtoolsFlagstat(minimap2.out)
