@@ -28,7 +28,7 @@ process minimap2 {
     tuple path(fastq), file(reference)
 
     output:
-    tuple sampleName, file("${sampleName}.sorted.bam")
+    tuple val(sampleName), file("${sampleName}.sorted.bam")
     
 
     script:
@@ -48,7 +48,7 @@ process samtoolsFlagstat {
     tag { sampleName }
 
     input:
-    tuple sampleName, file(sorted_bam)
+    tuple val(sampleName), file(sorted_bam)
 
     output:
     
@@ -67,10 +67,10 @@ process removeMappedReads {
     tag { sampleName }
 
     input:
-    tuple sampleName, file(sorted_bam)
+    tuple val(sampleName), file(sorted_bam)
 
     output:
-    tuple sampleName, file("${sampleName}.unmapped.sorted.bam")
+    tuple val(sampleName), file("${sampleName}.unmapped.sorted.bam")
     
 
     script:
@@ -88,7 +88,7 @@ process extractFastq {
     tag { sampleName }
 
     input:
-    tuple sampleName, file(unmapped_bam)
+    tuple val(sampleName), file(unmapped_bam)
 
     output:
     file("${sampleName}.cleaned.fastq")

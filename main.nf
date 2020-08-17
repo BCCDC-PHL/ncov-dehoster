@@ -1,14 +1,13 @@
 #!/usr/bin/env nextflow
 
 // enable dsl2
-nextflow.preview.dsl = 2
+nextflow.enable.dsl = 2
 
 // Modules
-include copyReference from './modules/minimap.nf'
-include bwa_mem from './modules/bwa-mem.nf'
-include samtoolsFlagstat from './modules/minimap.nf'
-include removeMappedReads from './modules/minimap.nf'
-include extractFastq from './modules/minimap.nf'
+include { bwaMem } from './modules/bwa-mem.nf'
+include { samtoolsFlagstat } from './modules/minimap.nf'
+include { removeMappedReads } from './modules/minimap.nf'
+include { extractFastq } from './modules/bwa-mem.nf'
 
 
 if ( !params.directory ) {
@@ -19,20 +18,17 @@ if ( !params.directory ) {
 // Main
 workflow {
 
-    Channel.fromFilePairs( "${params.directory}/*.fastq.gz", type: 'file', maxDepth: 1 )
+    Channel.fromFilePairs( "${params.directory}/*_R{1,2}_*.fastq.gz", type: 'file', maxDepth: 1 )
                         .set{ ch_fastq }
 
     Channel.fromPath( "${params.reference}")
                         .set{ ch_ref }
 
-    copyReference(ch_ref)
+    bwaMem(ch_fastq.combine(ch_ref))
 
-    bwa_mem(ch_fastq
-                .combine(copyReference.out))
+    samtoolsFlagstat(bwaMem.out)
 
-    samtoolsFlagstat(bwa_mem.out)
-
-    removeMappedReads(bwa_mem.out)
+    removeMappedReads(bwaMem.out)
 
     extractFastq(removeMappedReads.out)
 }
