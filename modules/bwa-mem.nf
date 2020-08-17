@@ -19,7 +19,7 @@ process bwaMem {
 
     """
     ln -s ${reference}* .
-    bwa mem -t 8 ${reference} ${fastq} | samtools sort -@ 8 -T "temp" -O BAM -o ${sampleName}.sorted.bam -
+    bwa mem -t 8 ${reference} ${fastq} | samtools sort -n -@ 8 -T "temp" -O BAM -o ${sampleName}.sorted.bam -
     """
 }
 
@@ -39,6 +39,6 @@ process extractFastq {
 
     script:
     """
-    samtools fastq -@ 4 ${unmapped_bam} -1 ${sampleName}.dehosted_R1.fastq.gz -2 ${sampleName}.dehosted_R2.fastq.gz
+    samtools fastq -@ 4 ${unmapped_bam} -1 ${sampleName}.dehosted_R1.fastq.gz -2 ${sampleName}.dehosted_R2.fastq.gz -s ${sampleName}.singletons.fastq.gz
     """
 }
