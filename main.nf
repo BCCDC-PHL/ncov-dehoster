@@ -19,7 +19,7 @@ if ( !params.directory ) {
 // Main
 workflow {
 
-    Channel.fromPath( "${params.directory}/*.fastq.gz", type: 'file', maxDepth: 1 )
+    Channel.fromFilePairs( "${params.directory}/*.fastq.gz", type: 'file', maxDepth: 1 )
                         .set{ ch_fastq }
 
     Channel.fromPath( "${params.reference}")

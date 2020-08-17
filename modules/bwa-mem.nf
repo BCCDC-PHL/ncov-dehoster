@@ -19,6 +19,6 @@ process bwa_mem {
     sampleName = fastq.getBaseName().replaceAll(~/\.fastq.*$/, '')
 
     """
-    bwa mem -t 8 ${reference} ${fastq} | samtools sort --threads 8 -T "temp" -O BAM -o ${sampleName}.sorted.bam
+    bwa mem -t 8 ${reference} ${fastq} | samtools sort -@ 8 -T "temp" -O BAM -o ${sampleName}.sorted.bam -
     """
 }
